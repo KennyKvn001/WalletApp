@@ -4,6 +4,7 @@ import Login from "./pages/login";
 import Transactions from "./pages/Transactions";
 import Budget from "./pages/Budget";
 import Navbar from "./components/Navbar";
+import Dashboard from "./pages/Dashboard";
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/transactions" element={<Transactions />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/budget" element={<Budget />} />
         <Route path="/" element={<Login />} />
       </Routes>

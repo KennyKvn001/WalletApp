@@ -13,8 +13,11 @@ const Navbar = () => {
   return (
     <nav className="bg-blue-600 p-4 text-white">
       <div className="container mx-auto flex justify-between items-center">
+      <Link to="/dashboard" className="text-xl font-bold">
+            Dashboard
+          </Link>
         <Link to="/transactions" className="text-xl font-bold">
-          Wallet App
+          Transactions
         </Link>
         <Link to="/budget" className="text-xl font-bold">
             Budget
