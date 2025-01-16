@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, generics, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -17,6 +17,7 @@ from .serializers import (
     BudgetSerializer,
     BudgetNotificationSerializer,
     TransactionReportSerializer,
+    UserRegistrationSerializer,
 )
 
 
@@ -26,6 +27,27 @@ def landing_page(request):
     return HttpResponse(
         "Welcome to the My WalletApp API! Visit <a href='/swagger/'>Swagger UI</a> for documentation."
     )
+
+
+class UserRegistrationView(generics.CreateAPIView):
+    serializer_class = UserRegistrationSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response(
+                {
+                    "user": {
+                        "id": user.id,
+                        "username": user.username,
+                        "email": user.email,
+                    },
+                    "message": "User registered successfully",
+                }
+            )
+        return Response(serializer.errors, status=400)
 
 
 class TransactionFilter(filters.FilterSet):

@@ -7,6 +7,7 @@ from .views import (
     TransactionViewSet,
     BudgetViewSet,
     landing_page,
+    UserRegistrationView,
 )
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -15,9 +16,10 @@ from rest_framework import permissions
 # Swagger schema view
 schema_view = get_schema_view(
     openapi.Info(
-        title="Task Force Pro Wallet API",
+        title="MyWallet API",
         default_version="v1",
         description="API documentation for the Task Force Pro Wallet application",
+        contact=openapi.Contact(email="contact@Mywallet.info"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
@@ -40,6 +42,7 @@ urlpatterns = [
             [
                 path("login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
                 path("refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+                path("register/", UserRegistrationView.as_view(), name="register"),
             ]
         ),
     ),
