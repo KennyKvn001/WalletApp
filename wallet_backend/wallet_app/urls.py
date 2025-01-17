@@ -8,6 +8,7 @@ from .views import (
     BudgetViewSet,
     landing_page,
     UserRegistrationView,
+    UserDetailsView,
 )
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -43,6 +44,7 @@ urlpatterns = [
                 path("login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
                 path("refresh/", TokenRefreshView.as_view(), name="token_refresh"),
                 path("register/", UserRegistrationView.as_view(), name="register"),
+                path("user/", UserDetailsView.as_view(), name="user-details"),
             ]
         ),
     ),

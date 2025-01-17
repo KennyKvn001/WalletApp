@@ -18,7 +18,9 @@ from .serializers import (
     BudgetNotificationSerializer,
     TransactionReportSerializer,
     UserRegistrationSerializer,
+    UserSerializer,
 )
+from rest_framework.views import APIView
 
 
 # Landing page view
@@ -48,6 +50,17 @@ class UserRegistrationView(generics.CreateAPIView):
                 }
             )
         return Response(serializer.errors, status=400)
+
+
+class UserDetailsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """
+        Get details of the currently authenticated user.
+        """
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
 
 
 class TransactionFilter(filters.FilterSet):
