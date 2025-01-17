@@ -39,6 +39,10 @@ export default function Budgets() {
     fetchBudgets()
   }
 
+  const handleDeleteBudget = (budgetId) => {
+    setBudgets((prevBudgets) => prevBudgets.filter((budget) => budget.id !== budgetId));
+  };
+
   if (loading) return <div>Loading budgets...</div>
   if (error) return <div className="text-red-500">{error}</div>
 
@@ -47,7 +51,7 @@ export default function Budgets() {
       <h1 className="text-2xl font-semibold">Budgets</h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {budgets.map((budget) => (
-          <BudgetProgress key={budget.id} budget={budget} />
+          <BudgetProgress key={budget.id} budget={budget} onDelete={handleDeleteBudget}/>
         ))}
       </div>
       <div className="mt-8">

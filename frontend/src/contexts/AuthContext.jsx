@@ -7,12 +7,20 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const fetchUserDetails = async () => {
+    try {
+      const response = await authAPI.getUserDetails();
+      setUser(response.data);
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+      logout();
+    }
+  };
+
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     if (token) {
-      // Here you would typically validate the token with your backend
-      // For now, we'll just assume the presence of a token means the user is logged in
-      setUser({ isAuthenticated: true });
+      fetchUserDetails();
     }
     setLoading(false);
   }, []);
@@ -22,7 +30,7 @@ export const AuthProvider = ({ children }) => {
       const response = await authAPI.login(credentials);
       localStorage.setItem('access_token', response.data.access);
       localStorage.setItem('refresh_token', response.data.refresh);
-      setUser({ isAuthenticated: true });
+      await fetchUserDetails(); // Fetch user details after successful login
       return response;
     } catch (error) {
       throw error;
