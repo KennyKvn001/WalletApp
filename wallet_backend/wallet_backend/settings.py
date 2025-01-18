@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-i@8=r!s=(k=p$d2e$k99pw=zetu$bp2mvbed69nrjettw7vg%e"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "corsheaders",
     "django_filters",
+    "whitenoise",
 ]
 
 MIDDLEWARE = [
@@ -64,6 +65,10 @@ MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
     ],
 }
 
@@ -104,6 +109,7 @@ WSGI_APPLICATION = "wallet_backend.wsgi.application"
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if DATABASE_URL:
+    print("Database URL is configured")
     DATABASES = {
         "default": dj_database_url.config(
             default=DATABASE_URL,
@@ -112,6 +118,7 @@ if DATABASE_URL:
             ssl_require=True,
         )
     }
+    print("Database config:", DATABASES)
 else:
     DATABASES = {
         "default": {
@@ -161,6 +168,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type

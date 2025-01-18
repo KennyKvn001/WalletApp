@@ -1,5 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from django.conf import settings
+from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import (
     AccountViewSet,
@@ -56,4 +58,4 @@ urlpatterns = [
     path(
         "redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
     ),  # ReDoc UI
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
