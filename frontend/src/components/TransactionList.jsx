@@ -61,9 +61,9 @@ export default function TransactionList({ transactions, onTransactionDeleted }) 
                     : ''
                 }`}
               >
-                {transaction.type === 'IN' ? '+' : '-'}${Math.abs(
+                {transaction.type === 'IN' ? '+' : '-'}{Math.abs(
                   transaction.amount
-                ).toFixed(2)}
+                ).toFixed(2)} RWF
               </td>
               <td className="whitespace-nowrap px-6 py-4">
                 <button

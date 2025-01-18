@@ -38,7 +38,7 @@ export default function Categories() {
       </div>
 
       <div className="grid gap-8 md:grid-cols-[2fr,3fr]">
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-col max-h-[400px] rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
           <h2 className="mb-4 text-xl font-semibold">Create Category</h2>
           <CategoryForm
             onSuccess={fetchCategories}

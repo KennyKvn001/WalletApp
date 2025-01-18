@@ -65,7 +65,7 @@ export default function BudgetProgress({ budget, onDelete }) {
             </div>
             <div className="text-right">
               <span className="text-sm font-semibold text-forest-900">
-                ${totalSpent.toFixed(2)} / ${budgetLimit.toFixed(2)}
+                {totalSpent.toFixed(2)} RWF / {budgetLimit.toFixed(2)} RWF
               </span>
             </div>
           </div>

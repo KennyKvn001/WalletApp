@@ -52,7 +52,7 @@ export default function Accounts() {
             <div className='flex flex-col gap-2'>
               <h2 className="text-lg font-medium">{account.name}</h2>
               <p className="text-2xl font-bold">
-                  ${Number(account.balance || 0).toFixed(2)}
+                  {Number(account.balance || 0).toFixed(2)} RWF
               </p>
             </div>
             <div className="cursor-pointer text-red-600 hover:text-red-500">

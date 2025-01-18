@@ -104,7 +104,7 @@ export default function Dashboard() {
           <div key={account.id} className="rounded-lg bg-white p-4 shadow">
             <h2 className="text-lg font-medium">{account.name}</h2>
             <p className="text-2xl font-bold">
-              ${Number(account.balance || 0).toFixed(2)}
+              {Number(account.balance || 0).toFixed(2)} RWF
             </p>
           </div>
         ))}
@@ -130,13 +130,13 @@ export default function Dashboard() {
         )}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2 grid-cols-1">
         <div className="rounded-lg bg-white p-6 shadow">
           <h2 className="mb-4 text-lg font-medium">Recent Transactions</h2>
           <TransactionList transactions={transactions} />
         </div>
 
-        <div className="rounded-lg bg-white p-6 shadow">
+        <div className="rounded-lg bg-white p-6 shadow flex flex-col">
           <h2 className="mb-4 text-lg font-medium">Budget Overview</h2>
           <div className="space-y-4">
             {budgets.map((budget) => (

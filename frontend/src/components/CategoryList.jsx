@@ -40,7 +40,7 @@ export default function CategoryList({ categories, onCategoryDeleted }) {
                 )}
                 {subcategory.total_spending > 0 && (
                   <p className="mt-1 text-sm text-gray-600">
-                    Total Spending: ${subcategory.total_spending.toFixed(2)}
+                    Total Spending: {subcategory.total_spending.toFixed(2)} RWF
                   </p>
                 )}
               </div>
@@ -84,7 +84,7 @@ export default function CategoryList({ categories, onCategoryDeleted }) {
                 )}
                 {category.total_spending > 0 && (
                   <p className="mt-2 text-sm text-gray-600">
-                    Total Spending: ${category.total_spending.toFixed(2)}
+                    Total Spending: {category.total_spending.toFixed(2)} RWF
                   </p>
                 )}
               </div>
