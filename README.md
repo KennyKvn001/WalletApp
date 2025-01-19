@@ -1,5 +1,8 @@
 # MyWallet Application
 
+<img width="1512" alt="Screenshot 2025-01-19 at 17 51 45" src="https://github.com/user-attachments/assets/1d4f52b1-5196-4b14-9ff0-aa06982ae28e" />
+
+
 ## Overview
 
 MyWallet is a personal finance management application that allows users to track their income, expenses, budgets, and accounts. The application is built using React for the frontend and Django REST Framework for the backend. This README provides guidance on how to navigate through the project, set it up, and understand its functionality.
