@@ -32,9 +32,9 @@ export default function Transactions() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center max-[600px]:flex-col max-[600px]:gap-4 max-[600px]:items-start">
         <h1 className="text-2xl font-semibold">Transactions</h1>
-        <div className="flex gap-4">
+        <div className="flex gap-4 max-[600px]:flex-col-reverse max-[600px]:gap-2">
           <button
             onClick={() => setShowReport(!showReport)}
             className="bg-forest-900 text-white px-4 py-2 rounded-md hover:bg-forest-800"
