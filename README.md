@@ -2,6 +2,8 @@
 
 <img width="1512" alt="Screenshot 2025-01-19 at 17 51 45" src="https://github.com/user-attachments/assets/1d4f52b1-5196-4b14-9ff0-aa06982ae28e" />
 
+NB: This is How It looks loke when the User has loaded there data, It Is a sample user used to demostrate the UI.
+
 
 ## Overview
 
