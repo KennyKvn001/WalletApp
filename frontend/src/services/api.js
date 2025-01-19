@@ -78,7 +78,11 @@ export const transactionAPI = {
   create: (data) => api.post('/api/transactions/', data),
   update: (id, data) => api.put(`/api/transactions/${id}/`, data),
   delete: (id) => api.delete(`/api/transactions/${id}/`),
-  getReport: (params) => api.get('/api/transactions/generate_report/', { params }),
+  getReport: (params) => api.get('/api/transactions/generate_report/', 
+    { params: {
+    start_date: params.start_date,
+    end_date: params.end_date
+  } }),
   getVisualizationData: (params) => api.get('/api/transactions/visualization_data/', { params }),
 };
 

@@ -21,6 +21,8 @@ from .serializers import (
     UserSerializer,
 )
 from rest_framework.views import APIView
+from django.core.exceptions import ValidationError
+from django.utils.dateparse import parse_date
 
 
 # Landing page view
@@ -206,53 +208,88 @@ class TransactionViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["GET"])
     def generate_report(self, request):
         """Generate a comprehensive transaction report for a specific time period."""
-        start_date = request.query_params.get("start_date")
-        end_date = request.query_params.get("end_date")
+        try:
+            # Get and validate dates
+            start_date = request.query_params.get("start_date")
+            end_date = request.query_params.get("end_date")
 
-        if not start_date or not end_date:
-            return Response(
-                {"error": "start_date and end_date are required"},
-                status=status.HTTP_400_BAD_REQUEST,
+            if not start_date or not end_date:
+                return Response(
+                    {"error": "start_date and end_date are required"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            # Validate date format
+            try:
+                start_date = parse_date(start_date)
+                end_date = parse_date(end_date)
+                if not start_date or not end_date:
+                    raise ValidationError("Invalid date format")
+            except ValidationError:
+                return Response(
+                    {"error": "Invalid date format. Use YYYY-MM-DD"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            # Ensure start_date is before end_date
+            if start_date > end_date:
+                return Response(
+                    {"error": "start_date must be before end_date"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            # Get transactions
+            transactions = Transaction.objects.filter(
+                user=request.user, date__range=[start_date, end_date]
             )
 
-        transactions = Transaction.objects.filter(
-            user=request.user, date__range=[start_date, end_date]
-        )
-
-        report_data = {
-            "period": {"start_date": start_date, "end_date": end_date},
-            "summary": {
-                "total_in": transactions.filter(type="IN").aggregate(Sum("amount"))[
-                    "amount__sum"
-                ]
-                or 0,
-                "total_out": transactions.filter(type="OUT").aggregate(Sum("amount"))[
-                    "amount__sum"
-                ]
-                or 0,
-                "net": transactions.filter(type="IN").aggregate(Sum("amount"))[
-                    "amount__sum"
-                ]
+            # Calculate totals with proper null handling
+            total_in = (
+                transactions.filter(type="IN").aggregate(total=Sum("amount"))["total"]
                 or 0
-                - transactions.filter(type="OUT").aggregate(Sum("amount"))[
-                    "amount__sum"
-                ]
-                or 0,
-            },
-            "by_category": transactions.values("category__name").annotate(
-                total=Sum("amount"), count=Count("id")
-            ),
-            "by_account": transactions.values("account__name").annotate(
-                total=Sum("amount"), count=Count("id")
-            ),
-            "daily_totals": transactions.annotate(day=TruncDay("date"))
-            .values("day")
-            .annotate(total=Sum("amount"))
-            .order_by("day"),
-        }
+            )
+            total_out = (
+                transactions.filter(type="OUT").aggregate(total=Sum("amount"))["total"]
+                or 0
+            )
 
-        serializer = TransactionReportSerializer(report_data)
-        return Response(serializer.data)
+            # Prepare report data with null checks
+            report_data = {
+                "period": {
+                    "start_date": start_date.isoformat(),
+                    "end_date": end_date.isoformat(),
+                },
+                "summary": {
+                    "total_in": total_in,
+                    "total_out": total_out,
+                    "net": total_in - total_out,
+                },
+                "by_category": list(
+                    transactions.values("category__name")
+                    .annotate(total=Sum("amount"), count=Count("id"))
+                    .order_by("-total")
+                ),
+                "by_account": list(
+                    transactions.values("account__name")
+                    .annotate(total=Sum("amount"), count=Count("id"))
+                    .order_by("-total")
+                ),
+                "daily_totals": list(
+                    transactions.annotate(day=TruncDay("date"))
+                    .values("day")
+                    .annotate(total=Sum("amount"))
+                    .order_by("day")
+                ),
+            }
+
+            return Response(report_data)
+
+        except Exception as e:
+            # Log the error here if you have logging configured
+            return Response(
+                {"error": "An error occurred while generating the report"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
     @swagger_auto_schema(
         operation_description="Get visualization data for transactions.",
