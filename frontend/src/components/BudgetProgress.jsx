@@ -35,9 +35,6 @@ export default function BudgetProgress({ budget, onDelete }) {
 
   if (!progress) return null;
 
-  console.log('budget.limit:', budget.limit, typeof budget.limit);
-  console.log('progress.total_spent:', progress.total_spent, typeof progress.total_spent);
-
   const budgetLimit = Number(budget.limit) || 0;
   const totalSpent = Number(progress.total_spent) || 0;
   const percentage = budgetLimit > 0 ? (totalSpent / budgetLimit) * 100 : 0;
