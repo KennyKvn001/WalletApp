@@ -4,7 +4,6 @@
 
 NB: This is How It looks loke when the User has loaded there data, It Is a sample user used to demostrate the UI.
 
-
 ## Overview
 
 MyWallet is a personal finance management application that allows users to track their income, expenses, budgets, and accounts. The application is built using React for the frontend and Django REST Framework for the backend. This README provides guidance on how to navigate through the project, set it up, and understand its functionality.
@@ -61,7 +60,7 @@ MyWallet is a personal finance management application that allows users to track
    npm start
    ```
 
-   The frontend will be available at `mywalletapptaskforce.netlify.app`.
+   The frontend will be available at [mywalletapptaskforce.netlify.app](https://mywalletapptaskforce.netlify.app).
 
 ### Backend Setup
 
@@ -107,7 +106,7 @@ MyWallet is a personal finance management application that allows users to track
    python manage.py runserver
    ```
 
-   The backend will be available at `https://walletapp-89se.onrender.com/`.
+   The backend will be available at [https://walletapp-89se.onrender.com/](https://walletapp-89se.onrender.com/).
 
 ## Navigating the Application
 
@@ -123,7 +122,7 @@ MyWallet is a personal finance management application that allows users to track
 
 ### Backend API Documentation
 
-`https://walletapp-89se.onrender.com/swagger/`
+[API Documentation](https://walletapp-89se.onrender.com/swagger/)
 
 ## Contributing
 
