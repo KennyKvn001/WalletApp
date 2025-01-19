@@ -22,6 +22,10 @@ export default function TransactionList({ transactions, onTransactionDeleted }) 
     return <div>No transactions found.</div>
   }
 
+  const sortedTransactions = [...transactions].sort((a, b) => 
+    new Date(b.date) - new Date(a.date)
+  )
+
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
@@ -45,7 +49,7 @@ export default function TransactionList({ transactions, onTransactionDeleted }) 
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200 bg-white">
-          {transactions.map((transaction) => (
+          {sortedTransactions.map((transaction) => (
             <tr key={transaction.id}>
               <td className="whitespace-nowrap px-6 py-4">
                 {format(new Date(transaction.date), 'MMM d, yyyy')}
