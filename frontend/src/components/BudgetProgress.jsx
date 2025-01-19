@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { budgetAPI } from '../services/api';
-import { Trash2 } from 'lucide-react'; 
+import { Trash2 } from 'lucide-react';
+import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { Colors } from 'chart.js';
 
 export default function BudgetProgress({ budget, onDelete }) {
   const [progress, setProgress] = useState(null);
@@ -20,11 +22,8 @@ export default function BudgetProgress({ budget, onDelete }) {
 
   const handleDelete = async () => {
     try {
-      // Call the API to delete the budget
       await budgetAPI.delete(budget.id);
       console.log('Budget deleted successfully');
-
-      // Notify the parent component to remove the deleted budget
       if (onDelete) {
         onDelete(budget.id);
       }
@@ -38,41 +37,66 @@ export default function BudgetProgress({ budget, onDelete }) {
   const budgetLimit = Number(budget.limit) || 0;
   const totalSpent = Number(progress.total_spent) || 0;
   const percentage = budgetLimit > 0 ? (totalSpent / budgetLimit) * 100 : 0;
+  
+  // Data for the donut chart
+  const data = [
+    { name: 'Spent', value: totalSpent },
+    { name: 'Remaining', value: Math.max(0, budgetLimit - totalSpent) }
+  ];
+
+  // Colors for the chart
+  const COLORS = ['#3B82F6', '#E5E7EB'];
 
   return (
-    <div className="rounded-lg bg-white p-4 shadow">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium">{budget.category_name}</h3>
-        <Trash2
+    <div className="p-4 bg-white rounded-lg shadow">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-semibold">{budget.category_name}</h3>
+        <button 
           onClick={handleDelete}
-          className="text-red-500 hover:text-red-700 cursor-pointer"
-          size={20} // Adjust the size of the icon
-        />
+          className="text-gray-400 hover:text-red-500"
+        >
+          <Trash2 size={20} />
+        </button>
       </div>
-      <p className="text-sm text-gray-500">
+      
+      <div className="text-sm text-gray-600 mb-4">
         {new Date(budget.start_date).toLocaleDateString()} - {new Date(budget.end_date).toLocaleDateString()}
-      </p>
-      <div className="mt-4">
-        <div className="relative pt-1">
-          <div className="mb-2 flex items-center justify-between">
-            <div>
-              <span className="inline-block rounded-full bg-forest-200 px-2 py-1 text-xs font-semibold uppercase text-forest-800">
-                {percentage.toFixed(0)}%
-              </span>
-            </div>
-            <div className="text-right">
-              <span className="text-sm font-semibold text-forest-900">
-                {totalSpent.toFixed(2)} RWF / {budgetLimit.toFixed(2)} RWF
-              </span>
-            </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div className="h-32">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={data}
+                innerRadius="60%"
+                outerRadius="100%"
+                paddingAngle={0}
+                dataKey="value"
+              >
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="flex flex-col justify-center">
+          <div className="text-2xl font-bold text-forest-800 mb-2">
+            {percentage.toFixed(0)}%
           </div>
-          <div className="mb-4 h-2 overflow-hidden rounded bg-forest-200">
-            <div
-              style={{ width: `${percentage}%` }}
-              className="h-2 rounded bg-forest-500"
-            ></div>
+          <div className="text-sm text-gray-600">
+            {totalSpent.toFixed(2)} RWF / {budgetLimit.toFixed(2)} RWF
           </div>
         </div>
+      </div>
+
+      <div className="w-full bg-gray-200 rounded-full h-2 mt-4">
+        <div
+          className="bg-forest-800 rounded-full h-2"
+          style={{ width: `${Math.min(100, percentage)}%` }}
+        />
       </div>
     </div>
   );

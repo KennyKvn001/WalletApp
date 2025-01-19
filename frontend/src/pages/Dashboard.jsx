@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
-import { Line } from 'react-chartjs-2'
+import { Line, Bar } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -14,11 +15,13 @@ import { transactionAPI, accountAPI, budgetAPI } from '../services/api'
 import TransactionList from '../components/TransactionList'
 import BudgetProgress from '../components/BudgetProgress'
 
+// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
@@ -31,6 +34,7 @@ export default function Dashboard() {
   const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [selectedChart, setSelectedChart] = useState('both') // 'line', 'bar', or 'both'
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,7 +61,7 @@ export default function Dashboard() {
   }, [])
 
   const processTransactionData = (transactions) => {
-    // Process data for chart
+    // Group transactions by date
     const dates = [...new Set(transactions.map(t => t.date))].sort()
     const incomeData = dates.map(date => 
       transactions
@@ -77,16 +81,46 @@ export default function Dashboard() {
           label: 'Income',
           data: incomeData,
           borderColor: 'rgb(75, 192, 192)',
+          backgroundColor: 'rgba(75, 192, 192, 0.5)',
           tension: 0.1,
         },
         {
           label: 'Expenses',
           data: expenseData,
           borderColor: 'rgb(255, 99, 132)',
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
           tension: 0.1,
         },
       ],
     })
+  }
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: (value) => `${value.toLocaleString()} RWF`
+        }
+      },
+      x: {
+        grid: {
+          display: false
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => `${context.dataset.label}: ${context.raw.toLocaleString()} RWF`
+        }
+      }
+    }
   }
 
   if (loading) {
@@ -111,21 +145,48 @@ export default function Dashboard() {
       </div>
 
       <div className="rounded-lg bg-white p-6 shadow">
-        <h2 className="mb-4 text-lg font-medium">Income vs Expenses</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-medium">Income vs Expenses</h2>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setSelectedChart('line')}
+              className={`px-3 py-1 rounded-md ${
+                selectedChart === 'line' ? 'bg-forest-900 text-white' : 'bg-gray-100'
+              }`}
+            >
+              Line Chart
+            </button>
+            <button
+              onClick={() => setSelectedChart('bar')}
+              className={`px-3 py-1 rounded-md ${
+                selectedChart === 'bar' ? 'bg-forest-900 text-white' : 'bg-gray-100'
+              }`}
+            >
+              Bar Chart
+            </button>
+            <button
+              onClick={() => setSelectedChart('both')}
+              className={`px-3 py-1 rounded-md ${
+                selectedChart === 'both' ? 'bg-forest-900 text-white' : 'bg-gray-100'
+              }`}
+            >
+              Both
+            </button>
+          </div>
+        </div>
+        
         {chartData && (
-          <div className="h-[300px]">
-            <Line
-              data={chartData}
-              options={{
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                  y: {
-                    beginAtZero: true,
-                  },
-                },
-              }}
-            />
+          <div className={`grid ${selectedChart === 'both' ? 'grid-cols-2 gap-4' : ''}`}>
+            {(selectedChart === 'line' || selectedChart === 'both') && (
+              <div className="h-[300px]">
+                <Line data={chartData} options={chartOptions} />
+              </div>
+            )}
+            {(selectedChart === 'bar' || selectedChart === 'both') && (
+              <div className="h-[300px]">
+                <Bar data={chartData} options={chartOptions} />
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -148,4 +209,3 @@ export default function Dashboard() {
     </div>
   )
 }
-
