@@ -87,7 +87,7 @@ export default function DashboardLayout() {
       {/* Main Content Area */}
       <div className="lg:pl-64">
         {/* Top Navbar */}
-        <nav className="bg-forest-800 shadow-sm h-16 px-6 flex items-center justify-between w-full fixed">
+        <nav className="bg-forest-800 shadow-sm h-16 px-6 flex items-center justify-between w-full fixed z-50">
           <div className="flex items-center">
             {/* Mobile menu button */}
             <button
