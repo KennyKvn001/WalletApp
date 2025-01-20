@@ -36,7 +36,7 @@ export default function DashboardLayout() {
       )}
 
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-40 w-64 transform bg-forest-900 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-forest-900 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
         isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         {/* Logo and close button container */}
@@ -87,7 +87,7 @@ export default function DashboardLayout() {
       {/* Main Content Area */}
       <div className="lg:pl-64">
         {/* Top Navbar */}
-        <nav className="bg-forest-800 shadow-sm h-16 px-6 flex items-center justify-between w-full fixed z-50">
+        <nav className="bg-forest-800 shadow-sm h-16 px-6 flex items-center justify-between w-full fixed z-40">
           <div className="flex items-center">
             {/* Mobile menu button */}
             <button
