@@ -15,7 +15,6 @@ import { transactionAPI, accountAPI, budgetAPI } from '../services/api'
 import TransactionList from '../components/TransactionList'
 import BudgetProgress from '../components/BudgetProgress'
 
-// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -34,7 +33,7 @@ export default function Dashboard() {
   const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [selectedChart, setSelectedChart] = useState('both') // 'line', 'bar', or 'both'
+  const [selectedChart, setSelectedChart] = useState('both') 
 
   useEffect(() => {
     const fetchData = async () => {
