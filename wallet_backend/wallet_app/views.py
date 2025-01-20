@@ -209,7 +209,6 @@ class TransactionViewSet(viewsets.ModelViewSet):
     def generate_report(self, request):
         """Generate a comprehensive transaction report for a specific time period."""
         try:
-            # Get and validate dates
             start_date = request.query_params.get("start_date")
             end_date = request.query_params.get("end_date")
 
@@ -219,7 +218,6 @@ class TransactionViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            # Validate date format
             try:
                 start_date = parse_date(start_date)
                 end_date = parse_date(end_date)
@@ -231,19 +229,16 @@ class TransactionViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            # Ensure start_date is before end_date
             if start_date > end_date:
                 return Response(
                     {"error": "start_date must be before end_date"},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            # Get transactions
             transactions = Transaction.objects.filter(
                 user=request.user, date__range=[start_date, end_date]
             )
 
-            # Calculate totals with proper null handling
             total_in = (
                 transactions.filter(type="IN").aggregate(total=Sum("amount"))["total"]
                 or 0
@@ -253,7 +248,6 @@ class TransactionViewSet(viewsets.ModelViewSet):
                 or 0
             )
 
-            # Prepare report data with null checks
             report_data = {
                 "period": {
                     "start_date": start_date.isoformat(),
@@ -285,7 +279,6 @@ class TransactionViewSet(viewsets.ModelViewSet):
             return Response(report_data)
 
         except Exception as e:
-            # Log the error here if you have logging configured
             return Response(
                 {"error": "An error occurred while generating the report"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
