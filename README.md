@@ -24,8 +24,8 @@ MyWallet is a personal finance management application that allows users to track
 ## Features
 
 - User authentication (login, registration)
-- Account management (create, update, delete accounts)
-- Category management (create, update, delete categories)
+- Account management (create, delete accounts)
+- Category management (create, delete categories)
 - Transaction management (record income and expenses)
 - Budget management (set budgets and track progress)
 - Visual representation of income and expenses through charts
