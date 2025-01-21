@@ -9,7 +9,7 @@ export default function ProtectedRoute({ children }) {
   }
 
   if (!user) {
-    return <Navigate to="/auth/login" />
+    return <Navigate to="/login" />
   }
 
   return children
